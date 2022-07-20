@@ -1,8 +1,8 @@
 import { Inject } from '@nestjs/common';
 import { DEFAULT_CLIENT_NAME } from '../constants';
-import { getElasticClientToken } from '../common/injection-tokens';
-
+import { getElasticClientToken } from '../injection-tokens';
 type InjectDecoratorType = ReturnType<typeof Inject>;
+
 /**
  *
  * @param clientName - The name of the elastic client to inject. Provided in forRoot

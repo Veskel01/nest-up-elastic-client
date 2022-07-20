@@ -1,8 +1,8 @@
 import { ConfigurableModuleBuilder, Provider } from '@nestjs/common';
 import { Client } from '@elastic/elasticsearch';
 import { CLASS_METHOD_NAME, DEFAULT_CLIENT_NAME, FACTORY_METHOD_NAME } from './constants';
-import { getElasticClientToken } from './common';
-import { ElasticClientModuleExtras, ElasticClientModuleOptions } from './interfaces/lib-interfaces';
+import { ElasticClientModuleExtras, ElasticClientModuleOptions } from './types';
+import { getElasticClientToken } from './injection-tokens';
 
 export const { ASYNC_OPTIONS_TYPE, OPTIONS_TYPE, ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } =
   new ConfigurableModuleBuilder<ElasticClientModuleOptions>()

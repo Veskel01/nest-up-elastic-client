@@ -5,4 +5,4 @@ export const FACTORY_METHOD_NAME = 'createElasticsearchModuleOptions';
 export const DEFAULT_CLIENT_NAME = 'default';
 
 export const META_ELASTIC_DOCUMENT_OPTIONS = 'elastic-document-options-metadata';
-export const META_ELASTIC_DOCUMENT_FIELD_TYPE = 'elastic-document-field-type-metadata';
+export const META_ELASTIC_DOCUMENT_PROPERTY = 'elastic-document-property-metadata';

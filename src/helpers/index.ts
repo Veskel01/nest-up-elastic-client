@@ -1,2 +1,4 @@
-export * from './read-json-properties.helper';
-export * from './get-elastic-document-props.helper';
+import { readJsonProperties } from './read-json-properties.helper';
+import { getDocumentMetadata } from './get-document-metadata.helper';
+
+export { readJsonProperties, getDocumentMetadata };

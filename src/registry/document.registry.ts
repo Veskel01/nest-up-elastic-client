@@ -32,6 +32,7 @@ export class DocumentRegistry {
       });
       return;
     }
+
     await client.indices.create({
       index: documentOptions.indexName,
       ...documentOptions.indexOptions,

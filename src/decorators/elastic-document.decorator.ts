@@ -1,7 +1,6 @@
 import { META_ELASTIC_DOCUMENT_OPTIONS } from '../constants';
-import { Inject, SetMetadata } from '@nestjs/common';
-import { ElasticDocumentOptions, ElasticDocumentType } from '../interfaces/lib-interfaces';
-import { getElasticDocumentPropsToken } from '../common';
+import { SetMetadata } from '@nestjs/common';
+import { ElasticDocumentOptions } from '../types';
 
 /**
  * @param {ElasticDocumentOptions} options - Elastic document options
@@ -13,6 +12,6 @@ import { getElasticDocumentPropsToken } from '../common';
 export const ElasticDocument = (options: ElasticDocumentOptions): ClassDecorator =>
   SetMetadata(META_ELASTIC_DOCUMENT_OPTIONS, options);
 
-export const InjectElasticDocumentProps = (
-  document: ElasticDocumentType
-): ReturnType<typeof Inject> => Inject(getElasticDocumentPropsToken(document));
+// export const InjectElasticDocumentProps = (
+//   document: ElasticDocumentType
+// ): ReturnType<typeof Inject> => Inject(getElasticDocumentPropsToken(document));
