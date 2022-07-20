@@ -2,10 +2,10 @@ import { Client } from '@elastic/elasticsearch';
 import { MappingProperty } from '@elastic/elasticsearch/lib/api/types';
 import { RuntimeException } from '../exceptions';
 import { readJsonProperties } from '../helpers';
-import { DocumentMetadata } from '../interfaces/module-interfaces';
+import { ElasticDocumentMetadata } from '../types';
 
 export class DocumentRegistry {
-  public static async register(metadata: DocumentMetadata, client: Client): Promise<void> {
+  public static async register(metadata: ElasticDocumentMetadata, client: Client): Promise<void> {
     const { documentOptions } = metadata;
     if (!documentOptions) {
       throw new RuntimeException(
@@ -18,13 +18,16 @@ export class DocumentRegistry {
     }
   }
 
-  private static async _createIndex(client: Client, metadata: DocumentMetadata): Promise<void> {
+  private static async _createIndex(
+    client: Client,
+    metadata: ElasticDocumentMetadata
+  ): Promise<void> {
     const { documentOptions } = metadata;
     const propertiesMappings = this._getIndexMappingsProperties({
       metadata
     });
-    const { settingsType } = documentOptions;
-    if (settingsType === 'json') {
+    const { type } = documentOptions;
+    if (type === 'json') {
       const jsonSettings = this._getJsonData(documentOptions.settingsJsonFilePath);
       await client.indices.create({
         index: documentOptions.indexName,
@@ -46,14 +49,14 @@ export class DocumentRegistry {
   private static _getIndexMappingsProperties({
     metadata
   }: {
-    metadata: DocumentMetadata;
+    metadata: ElasticDocumentMetadata;
   }): Record<string, MappingProperty> {
     const { propertiesMetadata } = metadata;
-    return propertiesMetadata.reduce((acc, { name, options }) => {
+    return propertiesMetadata.reduce((acc, { propertyName, options }) => {
       if (typeof options === 'string') {
-        acc[name] = readJsonProperties(options);
+        acc[propertyName] = readJsonProperties(options);
       } else {
-        acc[name] = {
+        acc[propertyName] = {
           ...options
         };
       }
