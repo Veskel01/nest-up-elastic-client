@@ -6,3 +6,5 @@ export const DEFAULT_CLIENT_NAME = 'default';
 
 export const META_ELASTIC_DOCUMENT_OPTIONS = 'elastic-document-options-metadata';
 export const META_ELASTIC_DOCUMENT_PROPERTY = 'elastic-document-property-metadata';
+
+export const META_CUSTOM_ELASTIC_REPOSITORY = 'custom-elastic-repository-metadata';

@@ -20,14 +20,18 @@ class TestDocument {
 @Injectable()
 class Service implements OnModuleInit {
   constructor(
-    @InjectElasticRepository(TestDocument) private repo: ElasticRepository<TestDocument>
+    @InjectElasticRepository(TestDocument) private readonly repo: ElasticRepository<TestDocument>
   ) {}
 
   async onModuleInit() {}
 }
 
 @Module({
-  imports: [ElasticClientModule.forFeature([TestDocument])],
+  imports: [
+    ElasticClientModule.forFeature({
+      documents: [TestDocument]
+    })
+  ],
   providers: [Service]
 })
 export class TestModule {}
