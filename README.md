@@ -3,7 +3,7 @@
 ## Installation
 
 ```bash
-$ not avaliable yet
+$ npm install @nestjsu-/elastic-client
 ```
 
 ## Usage

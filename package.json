@@ -1,5 +1,5 @@
 {
-  "name": "@nestjs-next/elastic-client",
+  "name": "@nestjs-up/elastic-client",
   "version": "0.2.0",
   "description": "Custom package for the Nest.JS framework to work with Elasticsearch",
   "author": "Jakub Andrzejewski",
@@ -9,6 +9,14 @@
   "files": [
     "lib/**/*"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ]
+  },
   "keywords": [
     "nestjs",
     "elasticsearch",
@@ -69,13 +77,5 @@
   "homepage": "https://github.com/Veskel01/nestjs-elastic-client#readme",
   "bugs": {
     "url": "https://github.com/Veskel01/nestjs-elastic-client/issues"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "release": {
-    "branches": [
-      "main"
-    ]
   }
 }
