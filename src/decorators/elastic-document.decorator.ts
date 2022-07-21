@@ -11,7 +11,3 @@ import { ElasticDocumentOptions } from '../types';
  */
 export const ElasticDocument = (options: ElasticDocumentOptions): ClassDecorator =>
   SetMetadata(META_ELASTIC_DOCUMENT_OPTIONS, options);
-
-// export const InjectElasticDocumentProps = (
-//   document: ElasticDocumentType
-// ): ReturnType<typeof Inject> => Inject(getElasticDocumentPropsToken(document));
