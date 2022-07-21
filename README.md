@@ -3,7 +3,7 @@
 ## Installation
 
 ```bash
-$ npm install @nestjsup-/elastic-client
+$ npm install @elastic/elasticsearch @nestjsup-/elastic-client
 ```
 
 ## Usage
