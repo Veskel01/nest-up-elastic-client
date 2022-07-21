@@ -1,10 +1,10 @@
 {
   "name": "@nestjs-up/elastic-client",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Custom package for the Nest.JS framework to work with Elasticsearch",
   "author": "Jakub Andrzejewski",
   "license": "MIT",
-  "main": "lib/main.ts",
+  "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
     "lib/**/*"
