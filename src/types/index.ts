@@ -4,3 +4,4 @@ export * from './elastic-document-metadata.interface';
 export * from './elastic-document-property.type';
 export * from './elastic-client-module-options.type';
 export * from './custom-elastic-repository.interface';
+export * from './elastic-client-module-options.type';
