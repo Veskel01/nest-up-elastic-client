@@ -1,85 +1,42 @@
-import { ModuleRef } from '@nestjs/core';
-import { Client, ClientOptions } from '@elastic/elasticsearch';
-import {
-  ConfigurableModuleAsyncOptions,
-  DynamicModule,
-  Inject,
-  Logger,
-  Module,
-  OnApplicationShutdown
-} from '@nestjs/common';
-import { DEFAULT_CLIENT_NAME } from './constants';
-import {
-  ASYNC_OPTIONS_TYPE,
-  ConfigurableModuleClass,
-  MODULE_OPTIONS_TOKEN
-} from './module.declaration';
-import { getElasticClientToken } from './injection-tokens';
+import { ClientOptions } from '@elastic/elasticsearch';
+import { ConfigurableModuleAsyncOptions, DynamicModule, Module } from '@nestjs/common';
+import { ElasticClientCoreModule } from './elastic-client-core.module';
 import {
   CustomElasticRepositoryClass,
   ElasticClientModuleExtras,
   ElasticDocumentClass
 } from './types';
-import { createElasticProviders } from './create-elastic.providers';
 
 @Module({})
-export class ElasticClientModule extends ConfigurableModuleClass implements OnApplicationShutdown {
-  private readonly _logger: Logger = new Logger(ElasticClientModule.name);
-
-  constructor(
-    @Inject(MODULE_OPTIONS_TOKEN)
-    private readonly clientOptions: ClientOptions & ElasticClientModuleExtras,
-    private readonly moduleRef: ModuleRef
-  ) {
-    super();
-  }
-
+export class ElasticClientModule {
   public static forRoot(options: ClientOptions & ElasticClientModuleExtras): DynamicModule {
-    return super.forRoot(options);
+    return {
+      module: ElasticClientModule,
+      imports: [ElasticClientCoreModule.forRoot(options)],
+      exports: [ElasticClientCoreModule]
+    };
   }
 
   public static forRootAsync(
     options: ConfigurableModuleAsyncOptions<ClientOptions, 'createElasticsearchModuleOptions'> &
       ElasticClientModuleExtras
   ): DynamicModule {
-    return super.forRootAsync(options);
-  }
-
-  /**
-   * @param options.documents - array of documents to be registered
-   * @param options.customRepositories - array of custom repositories to be registered
-   * @param options.clientName - name of the client
-   * @description - Creates providers for every elastic document provider in the array
-   */
-  public static forFeature({
-    documents,
-    customRepositories = [],
-    clientName = DEFAULT_CLIENT_NAME
-  }: {
-    documents: ElasticDocumentClass[];
-    customRepositories?: CustomElasticRepositoryClass[];
-    clientName?: string;
-  }): DynamicModule {
-    const providers = createElasticProviders(documents, customRepositories, clientName);
     return {
       module: ElasticClientModule,
-      providers,
-      exports: providers
+      imports: [ElasticClientCoreModule.forRootAsync(options)],
+      exports: [ElasticClientCoreModule]
     };
   }
 
-  async onApplicationShutdown(): Promise<void> {
-    const elasticClient = this.moduleRef.get<Client>(
-      getElasticClientToken(this.clientOptions.clientName),
-      { strict: false }
-    );
-    const { connections } = elasticClient.connectionPool;
-    if (connections.length > 0) {
-      try {
-        await elasticClient.close();
-      } catch (err) {
-        this._logger.error(err?.message);
-      }
-    }
+  public static forFeature(options: {
+    documents: ElasticDocumentClass[];
+    customRepositories?: CustomElasticRepositoryClass[] | undefined;
+    clientName?: string | undefined;
+  }): DynamicModule {
+    return {
+      module: ElasticClientModule,
+      imports: [ElasticClientCoreModule.forFeature(options)],
+      exports: [ElasticClientCoreModule]
+    };
   }
 }
