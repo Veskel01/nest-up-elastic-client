@@ -1,16 +1,10 @@
 import { META_CUSTOM_ELASTIC_REPOSITORY } from '../constants';
-import {
-  CustomElasticRepositoryMetadata,
-  CustomRepositoryClass
-} from '../types/custom-elastic-repository.interface';
+import { CustomElasticRepositoryClass, CustomElasticRepositoryMetadata } from '../types';
 
-// TODO - validate
 export const getCustomRepositoryMetadata = (
-  repo: CustomRepositoryClass
-): CustomElasticRepositoryMetadata => {
-  const metadata = Reflect.getMetadata(
-    META_CUSTOM_ELASTIC_REPOSITORY,
-    repo
-  ) as CustomElasticRepositoryMetadata;
-  return metadata;
+  repository: CustomElasticRepositoryClass
+): CustomElasticRepositoryMetadata | undefined => {
+  return Reflect.getMetadata(META_CUSTOM_ELASTIC_REPOSITORY, repository) as
+    | CustomElasticRepositoryMetadata
+    | undefined;
 };

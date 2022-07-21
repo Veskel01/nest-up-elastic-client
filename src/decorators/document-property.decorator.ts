@@ -1,4 +1,4 @@
-import { ElasticDocumentPropertiesStorage } from '../storage';
+import { ElasticDocumentsMetadataStorage } from '../storage';
 import { ElasticDocumentProperty } from '../types';
 
 /**
@@ -7,10 +7,10 @@ import { ElasticDocumentProperty } from '../types';
  */
 export const Property = (options: ElasticDocumentProperty): PropertyDecorator => {
   return (target, propertyKey) => {
-    ElasticDocumentPropertiesStorage.addDocumentProperty({
+    ElasticDocumentsMetadataStorage.addDocumentPropertyMetadata({
+      options,
       propertyName: propertyKey.toString(),
-      target: target.constructor,
-      options
+      target: target.constructor
     });
   };
 };

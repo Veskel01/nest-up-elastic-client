@@ -6,27 +6,33 @@ import {
   QueryDslMultiMatchQuery,
   SearchResponse
 } from '@elastic/elasticsearch/lib/api/types';
+import { from, Observable } from 'rxjs';
 import { ElasticDocumentMetadata } from '../types';
 import { SearchOptions } from '../types/elastic-repository.types';
 
 export class QueryRepository<T> {
   protected readonly indexName: string;
 
-  constructor(public readonly client: Client, public readonly metadata: ElasticDocumentMetadata) {
-    this.indexName = metadata.documentOptions.indexName;
+  constructor(
+    public readonly client: Client,
+    protected readonly metadata: ElasticDocumentMetadata
+  ) {
+    this.indexName = metadata.indexName;
   }
 
   public boolQuerySearch(
     queryOptions: QueryDslBoolQuery = {},
     options: SearchOptions = {}
-  ): Promise<SearchResponse<T>> {
-    return this.client.search({
-      ...options,
-      index: this.indexName,
-      query: {
-        bool: queryOptions
-      }
-    });
+  ): Observable<SearchResponse<T>> {
+    return from(
+      this.client.search<T>({
+        ...options,
+        index: this.indexName,
+        query: {
+          bool: queryOptions
+        }
+      })
+    );
   }
 
   public constantScoreSearch(
@@ -34,14 +40,16 @@ export class QueryRepository<T> {
       filter: {}
     },
     searchOptions: SearchOptions = {}
-  ): Promise<SearchResponse<T>> {
-    return this.client.search({
-      ...searchOptions,
-      index: this.indexName,
-      query: {
-        constant_score: queryOptions
-      }
-    });
+  ): Observable<SearchResponse<T>> {
+    return from(
+      this.client.search<T>({
+        ...searchOptions,
+        index: this.indexName,
+        query: {
+          constant_score: queryOptions
+        }
+      })
+    );
   }
 
   public matchQuerySearch<K extends keyof T>(
@@ -49,17 +57,19 @@ export class QueryRepository<T> {
     value: string | number | boolean,
     queryOptions: Omit<QueryDslMatchQuery, 'query'> = {},
     options: SearchOptions = {}
-  ): Promise<SearchResponse<T>> {
-    return this.client.search({
-      ...options,
-      index: this.indexName,
-      query: {
-        ...queryOptions,
-        match: {
-          [key]: value
+  ): Observable<SearchResponse<T>> {
+    return from(
+      this.client.search<T>({
+        ...options,
+        index: this.indexName,
+        query: {
+          ...queryOptions,
+          match: {
+            [key]: value
+          }
         }
-      }
-    });
+      })
+    );
   }
 
   public multiMatchQuerySearch<K extends keyof T>(
@@ -67,17 +77,19 @@ export class QueryRepository<T> {
     query: string,
     queryOptions: Omit<QueryDslMultiMatchQuery, 'query' | 'fields'> = {},
     options: SearchOptions = {}
-  ): Promise<SearchResponse<T>> {
-    return this.client.search({
-      ...options,
-      index: this.indexName,
-      query: {
-        multi_match: {
-          ...queryOptions,
-          query,
-          fields: keys as string[]
+  ): Observable<SearchResponse<T>> {
+    return from(
+      this.client.search<T>({
+        ...options,
+        index: this.indexName,
+        query: {
+          multi_match: {
+            ...queryOptions,
+            query,
+            fields: keys as string[]
+          }
         }
-      }
-    });
+      })
+    );
   }
 }

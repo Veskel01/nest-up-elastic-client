@@ -1,6 +1,6 @@
 {
-  "name": "nestjs-elastic-client",
-  "version": "0.1.0",
+  "name": "@nestjs-next/elastic-client",
+  "version": "0.2.0",
   "description": "Custom package for the Nest.JS framework to work with Elasticsearch",
   "author": "Jakub Andrzejewski",
   "license": "MIT",
@@ -22,7 +22,10 @@
     "build": "npm run prebuild && tsc",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test:e2e:dev": "jest --config ./tests/jest-e2e.json --watch"
+    "prepublish:npm": "npm run build",
+    "publish:npm": "npm publish --access public",
+    "test:e2e:dev": "jest --config ./tests/jest-e2e.json --watch",
+    "debug": "ts-node-dev ./main.ts"
   },
   "devDependencies": {
     "@elastic/elasticsearch": "^8.2.1",
@@ -74,9 +77,5 @@
     "branches": [
       "main"
     ]
-  },
-  "dependencies": {
-    "@nestjs/platform-express": "^9.0.5",
-    "ts-node-dev": "^2.0.0"
   }
 }

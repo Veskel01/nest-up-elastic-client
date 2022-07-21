@@ -4,9 +4,8 @@ import { DynamicModule, Inject, Logger, Module, OnApplicationShutdown } from '@n
 import { DEFAULT_CLIENT_NAME } from './constants';
 import { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN, OPTIONS_TYPE } from './module.declaration';
 import { getElasticClientToken } from './injection-tokens';
-import { ElasticDocumentClass } from './types';
+import { CustomElasticRepositoryClass, ElasticDocumentClass } from './types';
 import { createElasticProviders } from './create-elastic.providers';
-import { CustomRepositoryClass } from './types/custom-elastic-repository.interface';
 
 @Module({})
 export class ElasticClientModule extends ConfigurableModuleClass implements OnApplicationShutdown {
@@ -20,21 +19,21 @@ export class ElasticClientModule extends ConfigurableModuleClass implements OnAp
   }
 
   /**
-   * @param documents - array of documents to be registered
-   * @param clientName - name of the client
+   * @param options.documents - array of documents to be registered
+   * @param options.customRepositories - array of custom repositories to be registered
+   * @param options.clientName - name of the client
    * @description - Creates providers for every elastic document provider in the array
    */
   public static forFeature({
     documents,
-    clientName = DEFAULT_CLIENT_NAME,
-    customRepositories = []
+    customRepositories = [],
+    clientName = DEFAULT_CLIENT_NAME
   }: {
     documents: ElasticDocumentClass[];
-    customRepositories?: CustomRepositoryClass[];
+    customRepositories?: CustomElasticRepositoryClass[];
     clientName?: string;
   }): DynamicModule {
     const providers = createElasticProviders(documents, customRepositories, clientName);
-
     return {
       module: ElasticClientModule,
       providers,

@@ -1,4 +1,3 @@
-// export * from './elastic-documents-metadata.storage';
-import { ElasticDocumentPropertiesStorage } from './elastic-document-properties.storage';
+import { ElasticDocumentsMetadataStorage } from './elastic-documents-metadata.storage';
 
-export { ElasticDocumentPropertiesStorage };
+export { ElasticDocumentsMetadataStorage };

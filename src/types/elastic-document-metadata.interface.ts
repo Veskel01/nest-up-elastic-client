@@ -1,7 +1,11 @@
-import { ElasticDocumentOptions } from './elastic-document-options.type';
-import { PlainElasticDocumentPropertyMetadata } from './elastic-document-property.type';
+import { MappingProperty } from '@elastic/elasticsearch/lib/api/types';
+import { CreateIndexType, SynchronizeIndexSettings } from './elastic-document-options.type';
 
 export interface ElasticDocumentMetadata {
-  documentOptions: ElasticDocumentOptions;
-  propertiesMetadata: PlainElasticDocumentPropertyMetadata[];
+  indexName: string;
+  createOnInit: boolean;
+  synchronize: boolean;
+  createIndexSettings: CreateIndexType;
+  synchronizeSettings: SynchronizeIndexSettings;
+  propertiesMappings: Record<string, MappingProperty>;
 }

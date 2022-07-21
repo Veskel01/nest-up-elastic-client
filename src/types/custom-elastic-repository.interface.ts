@@ -2,9 +2,9 @@ import { Type } from '@nestjs/common';
 import { ElasticRepository } from '../repositories';
 import { ElasticDocumentClass } from './elastic-document.type';
 
-export type CustomRepositoryClass = Type<ElasticRepository<unknown>>;
+export type CustomElasticRepositoryClass = Type<ElasticRepository<unknown>>;
 
 export interface CustomElasticRepositoryMetadata {
-  target: Function;
+  customRepository: CustomElasticRepositoryClass;
   document: ElasticDocumentClass;
 }

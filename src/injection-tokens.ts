@@ -6,6 +6,3 @@ export const getElasticClientToken = (clientName: string = DEFAULT_CLIENT_NAME):
 
 export const getElasticRepositoryToken = (document: ElasticDocumentClass): string =>
   `${document}_elastic_repository`;
-
-export const getDocumentMetadataToken = (document: ElasticDocumentClass): string =>
-  `${document.name}_elastic_document_metadata`;

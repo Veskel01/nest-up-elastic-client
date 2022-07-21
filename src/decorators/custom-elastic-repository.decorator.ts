@@ -1,11 +1,14 @@
 import { META_CUSTOM_ELASTIC_REPOSITORY } from '../constants';
-import { ElasticDocumentClass } from '../types';
-import { CustomElasticRepositoryMetadata } from '../types/custom-elastic-repository.interface';
+import {
+  CustomElasticRepositoryClass,
+  CustomElasticRepositoryMetadata,
+  ElasticDocumentClass
+} from '../types';
 
 export const CustomElasticRepository = (document: ElasticDocumentClass): ClassDecorator => {
   return (target) => {
     const metadata: CustomElasticRepositoryMetadata = {
-      target,
+      customRepository: target as unknown as CustomElasticRepositoryClass,
       document
     };
     Reflect.defineMetadata(META_CUSTOM_ELASTIC_REPOSITORY, metadata, target);

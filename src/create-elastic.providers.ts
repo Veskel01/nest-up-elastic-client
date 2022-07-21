@@ -1,33 +1,31 @@
 import { Client } from '@elastic/elasticsearch';
 import { Provider } from '@nestjs/common';
-import {
-  getDocumentMetadataToken,
-  getElasticClientToken,
-  getElasticRepositoryToken
-} from './injection-tokens';
-import { ElasticRepository } from './repositories';
-import { ElasticDocumentClass, ElasticDocumentMetadata } from './types';
-import { getDocumentMetadata } from './helpers/get-document-metadata.helper';
-import { CustomRepositoryClass } from './types/custom-elastic-repository.interface';
 import { getCustomRepositoryMetadata } from './helpers';
+import { getElasticClientToken, getElasticRepositoryToken } from './injection-tokens';
+import { ElasticDocumentRegistry } from './registry';
+import { ElasticRepository } from './repositories';
+import { ElasticDocumentsMetadataStorage } from './storage';
+import {
+  CustomElasticRepositoryClass,
+  CustomElasticRepositoryMetadata,
+  ElasticDocumentClass
+} from './types';
 
 export const createElasticProviders = (
   documents: ElasticDocumentClass[],
-  customRepositories: CustomRepositoryClass[],
+  customRepositories: CustomElasticRepositoryClass[],
   clientName: string
 ): Provider[] => {
   return (documents || []).flatMap((document) => {
-    const documentMetadata = getDocumentMetadata(document);
+    const documentMetadata = ElasticDocumentsMetadataStorage.getDocumentMetadata(document);
     return [
       {
         provide: getElasticRepositoryToken(document),
-        useFactory: (client: Client): ElasticRepository<typeof document> =>
-          new ElasticRepository(client, documentMetadata),
+        useFactory: async (client: Client): Promise<ElasticRepository<typeof document>> => {
+          await ElasticDocumentRegistry.registerDocument(documentMetadata, client);
+          return new ElasticRepository(client, documentMetadata);
+        },
         inject: [getElasticClientToken(clientName)]
-      },
-      {
-        provide: getDocumentMetadataToken(document),
-        useValue: documentMetadata
       },
       ...createCustomRepositoryProviders(customRepositories, clientName)
     ];
@@ -35,16 +33,20 @@ export const createElasticProviders = (
 };
 
 const createCustomRepositoryProviders = (
-  customRepositories: CustomRepositoryClass[],
+  customRepositories: CustomElasticRepositoryClass[],
   clientName: string
 ): Provider[] => {
-  return customRepositories.map((Repository) => {
-    const metadata = getCustomRepositoryMetadata(Repository);
-    return {
-      provide: metadata.target,
-      useFactory: (client: Client, metadata: ElasticDocumentMetadata) =>
-        new Repository(client, metadata),
-      inject: [getElasticClientToken(clientName), getDocumentMetadataToken(metadata.document)]
-    };
-  });
+  return customRepositories
+    .filter((repository) => getCustomRepositoryMetadata(repository))
+    .map((repository) => {
+      const { customRepository: CustomRepository, document } = getCustomRepositoryMetadata(
+        repository
+      ) as CustomElasticRepositoryMetadata;
+      const documentMetadata = ElasticDocumentsMetadataStorage.getDocumentMetadata(document);
+      return {
+        provide: CustomRepository,
+        useFactory: (client: Client) => new CustomRepository(client, documentMetadata),
+        inject: [getElasticClientToken(clientName)]
+      };
+    });
 };

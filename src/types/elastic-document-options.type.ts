@@ -1,22 +1,35 @@
-import { TransportRequestOptionsWithOutMeta } from '@elastic/elasticsearch';
-import { IndicesCreateRequest } from '@elastic/elasticsearch/lib/api/types';
+import {
+  IndicesCreateRequest,
+  IndicesPutSettingsRequest,
+  MappingTypeMapping
+} from '@elastic/elasticsearch/lib/api/types';
 import { DeepOmit } from './util.types';
 
-type CreateIndexType = DeepOmit<IndicesCreateRequest, 'index' | 'properties'>;
+export type CreateIndexType = DeepOmit<
+  IndicesCreateRequest,
+  'index' | 'properties' | 'mappings'
+> & {
+  mappings?: MappingTypeMapping;
+};
 
-type ElasticDocumentOptionsWithoutJson = {
+export type SynchronizeIndexSettings = Omit<IndicesPutSettingsRequest, 'index'>;
+
+export type ElasticDocumentOptionsWithoutJson = {
   indexName: string;
   createOnInit?: boolean;
   type: 'object-settings';
-  indexOptions?: CreateIndexType;
-  transportOptions?: TransportRequestOptionsWithOutMeta;
+  synchronize?: boolean;
+  createIndexSettings?: CreateIndexType;
+  synchronizeSettings?: SynchronizeIndexSettings;
 };
 
-type ElasticDocumentOptionsWithJson = {
+export type ElasticDocumentOptionsWithJson = {
   indexName: string;
   createOnInit?: boolean;
   type: 'json';
+  synchronize?: boolean;
   settingsJsonFilePath: string;
+  synchronizeSettings?: SynchronizeIndexSettings;
 };
 
 export type ElasticDocumentOptions =
