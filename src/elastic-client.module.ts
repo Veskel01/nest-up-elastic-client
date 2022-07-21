@@ -1,25 +1,15 @@
 import { ModuleRef } from '@nestjs/core';
 import { Client } from '@elastic/elasticsearch';
-import {
-  DynamicModule,
-  Inject,
-  Logger,
-  Module,
-  OnApplicationShutdown,
-  OnModuleInit
-} from '@nestjs/common';
-import { getElasticClientToken } from './common';
+import { DynamicModule, Inject, Logger, Module, OnApplicationShutdown } from '@nestjs/common';
 import { DEFAULT_CLIENT_NAME } from './constants';
 import { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN, OPTIONS_TYPE } from './module.declaration';
-import { ElasticProvidersFactory } from './factories';
-import { ForFeatureOptions } from './interfaces/lib-interfaces';
-import { RuntimeException } from './exceptions';
+import { getElasticClientToken } from './injection-tokens';
+import { ElasticDocumentClass } from './types';
+import { createElasticProviders } from './create-elastic.providers';
+import { CustomRepositoryClass } from './types/custom-elastic-repository.interface';
 
 @Module({})
-export class ElasticClientModule
-  extends ConfigurableModuleClass
-  implements OnApplicationShutdown, OnModuleInit
-{
+export class ElasticClientModule extends ConfigurableModuleClass implements OnApplicationShutdown {
   private readonly _logger: Logger = new Logger(ElasticClientModule.name);
 
   constructor(
@@ -30,37 +20,26 @@ export class ElasticClientModule
   }
 
   /**
-   * @param options.documents - array of documents to be registered
-   * @param options.clientName - name of the client
+   * @param documents - array of documents to be registered
+   * @param clientName - name of the client
    * @description - Creates providers for every elastic document provider in the array
    */
   public static forFeature({
-    documents = [],
-    clientName = DEFAULT_CLIENT_NAME
-  }: ForFeatureOptions): DynamicModule {
-    const providers = ElasticProvidersFactory.create(documents, clientName);
+    documents,
+    clientName = DEFAULT_CLIENT_NAME,
+    customRepositories = []
+  }: {
+    documents: ElasticDocumentClass[];
+    customRepositories?: CustomRepositoryClass[];
+    clientName?: string;
+  }): DynamicModule {
+    const providers = createElasticProviders(documents, customRepositories, clientName);
 
     return {
       module: ElasticClientModule,
       providers,
       exports: providers
     };
-  }
-
-  async onModuleInit(): Promise<void> {
-    const elasticClient = this.moduleRef.get<Client>(
-      getElasticClientToken(this.clientOptions.clientName),
-      { strict: false }
-    );
-    try {
-      const isConnected = await elasticClient.ping();
-      if (!isConnected) {
-        throw new RuntimeException('Elastic client is not connected');
-      }
-    } catch (err) {
-      this._logger.error(err?.message);
-      throw new RuntimeException('Elastic client is not connected');
-    }
   }
 
   async onApplicationShutdown(): Promise<void> {

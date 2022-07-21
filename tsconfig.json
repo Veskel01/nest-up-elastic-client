@@ -9,7 +9,7 @@
     "target": "es2017",
     "sourceMap": false,
     "outDir": "./lib",
-    "rootDir": "./src",
+    // "rootDir": "./src",
     "incremental": false,
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -20,6 +20,6 @@
     "resolveJsonModule": true,
     "esModuleInterop": true
   },
-  "include": ["./src/**/*"],
-  "exclude": ["node_modules", "lib", "tests", "**/*.spec.ts", "**/node_modules/*"]
+  // "include": ["./src/**/*"],
+  "exclude": ["node_modules", "lib", "tests", "**/*.spec.ts"]
 }
