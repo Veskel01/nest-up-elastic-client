@@ -77,7 +77,8 @@ In ./index-mappings/products.index.json
 }
 ```
 
-Each document may have its own properties, which will be entered in the mappings object in the index. To do that decorate selected properties with `@Property()` decorator
+Each document may have its own properties, which will be entered in the mappings object in the index. To do that decorate selected properties with `@Property()` decorator.
+If you do not want to set your own properties - do not use the decorator `@Property()`
 
 ```typescript
 @ElasticDocument({
