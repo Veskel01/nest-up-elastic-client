@@ -74,5 +74,9 @@
     "branches": [
       "main"
     ]
+  },
+  "dependencies": {
+    "@nestjs/platform-express": "^9.0.5",
+    "ts-node-dev": "^2.0.0"
   }
 }
