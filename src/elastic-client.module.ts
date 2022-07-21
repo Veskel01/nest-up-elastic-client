@@ -1,10 +1,25 @@
 import { ModuleRef } from '@nestjs/core';
-import { Client } from '@elastic/elasticsearch';
-import { DynamicModule, Inject, Logger, Module, OnApplicationShutdown } from '@nestjs/common';
+import { Client, ClientOptions } from '@elastic/elasticsearch';
+import {
+  ConfigurableModuleAsyncOptions,
+  DynamicModule,
+  Inject,
+  Logger,
+  Module,
+  OnApplicationShutdown
+} from '@nestjs/common';
 import { DEFAULT_CLIENT_NAME } from './constants';
-import { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN, OPTIONS_TYPE } from './module.declaration';
+import {
+  ASYNC_OPTIONS_TYPE,
+  ConfigurableModuleClass,
+  MODULE_OPTIONS_TOKEN
+} from './module.declaration';
 import { getElasticClientToken } from './injection-tokens';
-import { CustomElasticRepositoryClass, ElasticDocumentClass } from './types';
+import {
+  CustomElasticRepositoryClass,
+  ElasticClientModuleExtras,
+  ElasticDocumentClass
+} from './types';
 import { createElasticProviders } from './create-elastic.providers';
 
 @Module({})
@@ -12,10 +27,22 @@ export class ElasticClientModule extends ConfigurableModuleClass implements OnAp
   private readonly _logger: Logger = new Logger(ElasticClientModule.name);
 
   constructor(
-    @Inject(MODULE_OPTIONS_TOKEN) private readonly clientOptions: typeof OPTIONS_TYPE,
+    @Inject(MODULE_OPTIONS_TOKEN)
+    private readonly clientOptions: ClientOptions & ElasticClientModuleExtras,
     private readonly moduleRef: ModuleRef
   ) {
     super();
+  }
+
+  public static forRoot(options: ClientOptions & ElasticClientModuleExtras): DynamicModule {
+    return super.forRoot(options);
+  }
+
+  public static forRootAsync(
+    options: ConfigurableModuleAsyncOptions<ClientOptions, 'createElasticsearchModuleOptions'> &
+      ElasticClientModuleExtras
+  ): DynamicModule {
+    return super.forRootAsync(options);
   }
 
   /**
