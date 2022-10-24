@@ -36,9 +36,9 @@
   },
   "devDependencies": {
     "@elastic/elasticsearch": "8.4.0",
-    "@nestjs/common": "9.1.5",
-    "@nestjs/core": "9.1.5",
-    "@nestjs/testing": "9.1.5",
+    "@nestjs/common": "9.1.6",
+    "@nestjs/core": "9.1.6",
+    "@nestjs/testing": "9.1.6",
     "@types/fs-extra": "9.0.13",
     "@types/jest": "29.2.0",
     "@types/node": "16.18.0",
