@@ -35,7 +35,7 @@
     "test:e2e:dev": "jest --config ./tests/jest-e2e.json --watch"
   },
   "devDependencies": {
-    "@elastic/elasticsearch": "8.5.0",
+    "@elastic/elasticsearch": "8.6.0",
     "@nestjs/common": "9.2.1",
     "@nestjs/core": "9.2.1",
     "@nestjs/testing": "9.2.1",
