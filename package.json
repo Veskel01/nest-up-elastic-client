@@ -50,7 +50,7 @@
     "eslint-plugin-prettier": "4.2.1",
     "fs-extra": "10.1.0",
     "jest": "29.3.1",
-    "prettier": "2.8.2",
+    "prettier": "2.8.3",
     "reflect-metadata": "0.1.13",
     "rimraf": "4.0.4",
     "rxjs": "7.8.0",
